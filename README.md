@@ -68,8 +68,46 @@ Using the **api-console**, you can explore different Hasura APIs.
 
 You will land up on the API Explorer where you can try out APIs (Data, Auth, Filestore and Notify) using the API Collections.
 
-### Data APIs
+### File APIs
 
+The File API on Hasura lets you upload and store files, and download them when required. This is done via simple POST, GET and DELETE requests on a single endpoint.
+
+Just like the Data service, the File API supports Role based access control to the files, along with custom authorization hooks. (Check out our [ documentation ](https://docs.hasura.io/) for more!)
+
+#### Uploading files
+
+Uploading a file requires you to generate a file_id and make a post request with the content of the file in the request body and the correct mime type as the content-type header.
+
+```http
+POST https://filestore.project-name.hasura-app.io/v1/file/05c40f1e-cdaf-4e29-8976-38c899 HTTP/1.1
+Content-Type: image/png
+Authorization: Bearer <token>
+
+<content-of-file-as-body>
+```
+
+This is a very simple to use system, and lets you directly add an Upload button on your frontend, without spending time setting up the backend.
+
+#### Downloading files
+Downloading a file requires the unique file id that was used to upload it. This can be stored in the database and retrieved for download.
+
+To download a particular file, what is required is a simple GET query.
+```http
+GET https://filestore.project-name.hasura-app.io/v1/file/05c40f1e-cdaf-4e29-8976-38c899 HTTP/1.1
+Authorization: Bearer <token>
+```
+
+#### Permissions
+By default, the File API provides three hooks to choose from
+
+  1. Private: Only logged in users can upload/download.
+  2. Public: Anyone can download, but only logged in users can upload.
+  3. Read Only: Anyone can download, but no one can upload.
+
+You can also set up your own authorization webhook!
+(Check out our [ documentation ](https://docs.hasura.io/) for more!)
+
+### Data APIs
 
 The Hasura Data API provides a HTTP/JSON API backed by a PostgreSQL database.
 
@@ -367,46 +405,6 @@ Bring up the API console using
 $ hasura api-console
 ```
 And then navigate to the [ Learning center ](http://localhost:8080/learning-center) tab.
-
-
-### File APIs
-
-The File API on Hasura lets you upload and store files, and download them when required. This is done via simple POST, GET and DELETE requests on a single endpoint.
-
-Just like the Data service, the File API supports Role based access control to the files, along with custom authorization hooks. (Check out our [ documentation ](https://docs.hasura.io/) for more!)
-
-#### Uploading files
-
-Uploading a file requires you to generate a file_id and make a post request with the content of the file in the request body and the correct mime type as the content-type header.
-
-```http
-POST https://filestore.project-name.hasura-app.io/v1/file/05c40f1e-cdaf-4e29-8976-38c899 HTTP/1.1
-Content-Type: image/png
-Authorization: Bearer <token>
-
-<content-of-file-as-body>
-```
-
-This is a very simple to use system, and lets you directly add an Upload button on your frontend, without spending time setting up the backend.
-
-#### Downloading files
-Downloading a file requires the unique file id that was used to upload it. This can be stored in the database and retrieved for download.
-
-To download a particular file, what is required is a simple GET query.
-```http
-GET https://filestore.project-name.hasura-app.io/v1/file/05c40f1e-cdaf-4e29-8976-38c899 HTTP/1.1
-Authorization: Bearer <token>
-```
-
-#### Permissions
-By default, the File API provides three hooks to choose from
-
-  1. Private: Only logged in users can upload/download.
-  2. Public: Anyone can download, but only logged in users can upload.
-  3. Read Only: Anyone can download, but no one can upload.
-
-You can also set up your own authorization webhook!
-(Check out our [ documentation ](https://docs.hasura.io/) for more!)
 
 ### Explore the Auth and Notify APIs
 
